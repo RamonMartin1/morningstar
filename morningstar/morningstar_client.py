@@ -68,8 +68,8 @@ class MorningstarClient():
 
         hist_prices = response.results[0].data
         for obs in hist_prices:
-            timestamp = datetime.strptime(obs['Date Received (GMT)'], '%d-%m-%Y')
-            price = float(obs['Last price'])
+            timestamp = datetime.strptime(obs['D953'], '%d-%m-%Y') # Date Received (GMT)
+            price = float(obs['D2']) # Last price
             historical_price_dict[timestamp] = price
         return historical_price_dict
 
