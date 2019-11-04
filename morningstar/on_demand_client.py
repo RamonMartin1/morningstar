@@ -21,7 +21,9 @@ class OnDemandClient():
             provider = OnDemand(config=config.get('provider')['ondemand'])
         self.provider = provider
 
-
+    def login(self):
+        # Login before using any method of provider
+        self.provider.login()
 
     def get_historical_rips_by_performanceid(self,
                                             performance_id: str,
@@ -39,8 +41,6 @@ class OnDemandClient():
             Returns:
                 List of RIPS objects, one for each date
         """
-        # Login before using any method of provider
-        self.provider.login()
 
         # Download csv data associated with this performance id
         params_historydata = {'ClientId': self.provider.config['clientid'],
@@ -73,9 +73,7 @@ class OnDemandClient():
             Returns:
                 List of RIPS objects, one for each date
         """
-        # Login before using any method of provider
-        self.provider.login()
-        
+
         # Use the fundshareclass_id to retrieve the share's xml
         params_sharexml = {'Package': 'EDW', 'IDType': 'FundShareClassId',
                            'ClientId': self.provider.config['clientid'],
@@ -125,9 +123,6 @@ class OnDemandClient():
             Returns:
                 List of RIPS objects, one for each date
             """
-
-        # Login before using any method of provider
-        self.provider.login()
 
         # Get universe to find Morningstar Id corresponding to isin
         #   no start and end date for search of isin in universe, max length
