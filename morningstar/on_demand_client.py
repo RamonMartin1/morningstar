@@ -142,9 +142,9 @@ class OnDemandClient():
         #   should be found, read out directly without searching by ISIN in the xml
         ms_id = root_n_universe.xpath(self.xpath_universe_morningstarid)
         if len(ms_id) == 0:
-            raise ValueError("No Morningstar Id could be found for the given ISIN. Maybe the share is dead for too long or in a different universe?")
+            raise ValueError('No Morningstar Id could be found for ISIN {}. Maybe the share is dead for too long or in a different universe?'.format(isin))
         if len(ms_id) > 1:
-            raise ValueError("More than one Morningstar Id found for this ISIN.")
+            raise ValueError('More than one Morningstar Id found for ISIN {}.'.format(isin))
         ms_id = str(ms_id[0])
 
         # Use the Morningstar Id to retrieve the RIPS of the basecurrency
