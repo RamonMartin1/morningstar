@@ -25,10 +25,10 @@ class MorningstarClient():
         self.provider = provider
 
     def _get_instrument_price_info(self,
-                                  instrument: str,
-                                  start_date: str,
-                                  end_date: str,
-                                  bar_type: str = 'dailybar') -> MSResponse:
+                                   instrument: str,
+                                   start_date: str,
+                                   end_date: str,
+                                   bar_type: str = 'dailybar') -> MSResponse:
         return self.provider.index_ts({
             'pricechangeadjusted&instrument': instrument,
             'sdate': start_date,
@@ -68,8 +68,8 @@ class MorningstarClient():
 
         hist_prices = response.results[0].data
         for obs in hist_prices:
-            timestamp = datetime.strptime(obs['D953'], '%d-%m-%Y') # Date Received (GMT)
-            price = float(obs['D2']) # Last price
+            timestamp = datetime.strptime(obs['Date Received (GMT)'], '%d-%m-%Y')  # D953
+            price = float(obs['Last price'])  # D2
             historical_price_dict[timestamp] = price
         return historical_price_dict
 
