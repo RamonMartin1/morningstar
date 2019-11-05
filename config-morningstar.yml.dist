@@ -5,3 +5,7 @@ provider:
   morningstar:
     username: foo
     password: bar
+  ondemand:
+    clientid: baz
+    username: foo
+    password: bar

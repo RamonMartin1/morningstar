@@ -88,5 +88,5 @@ class MorningstarTest(unittest.TestCase):
     def test_indexts_no_data(self):
         r = self.provider_live.index_ts(
             {'instrument': '0.0.NONEXISTENT', 'sdate': '01-01-2019', 'edate': '01-01-2019', 'type': 'dailybar'})
-        self.assertEqual(['Invalid Instrument=0.0.NONEXISTENT', 'Invalid request'], r.errors)
+        self.assertEqual(['Invalid Instrument=0.0.NONEXISTENT'], r.errors)
         self.assertEqual([], r.results)

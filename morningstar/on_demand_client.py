@@ -7,7 +7,6 @@ from typing import Optional
 
 
 class OnDemandClient():
-
     xpath_share_performanceid_basecurrency = "/FundShareClass/PerformanceId/Result[./IsBaseCurrency = 'true']/PerformanceId/text()"
     xpath_universe_morningstarid = "/FundShareClassList/ShareClass/Id/text()"
 
@@ -22,14 +21,16 @@ class OnDemandClient():
         self.provider = provider
 
     def login(self):
-        # Login before using any method of provider
+        """
+        Establish a session before using any method of provider
+        """
         self.provider.login()
 
     def get_historical_rips_by_performanceid(self,
-                                            performance_id: str,
-                                            return_type: OnDemandReturnType,
-                                            start_date: str = '',
-                                            end_date: str = '') -> [RIPS]:
+                                             performance_id: str,
+                                             return_type: OnDemandReturnType,
+                                             start_date: str = '',
+                                             end_date: str = '') -> [RIPS]:
         """Fetches historical RIPS for the given performance id
 
             Args:
@@ -44,14 +45,12 @@ class OnDemandClient():
 
         # Download csv data associated with this performance id
         params_historydata = {'ClientId': self.provider.config['clientid'],
-                                'DataType': 'rips',
-                                'StartDate': start_date,
-                                'EndDate': end_date,
-                                'PriceType': str(return_type.value),
-                                'PerformanceId': performance_id}
+                              'DataType': 'rips',
+                              'StartDate': start_date,
+                              'EndDate': end_date,
+                              'PriceType': str(return_type.value),
+                              'PerformanceId': performance_id}
         return self.provider.history_data(params=params_historydata)
-
-
 
     def get_historical_rips_by_fundshareclassid(self,
                                                 fundshareclass_id: str,
@@ -87,17 +86,16 @@ class OnDemandClient():
         if len(share_performanceid_basecurrency) == 0:
             raise ValueError("No performance id in basecurrency could be found")
         if len(share_performanceid_basecurrency) > 1:
-            raise ValueError("More than 1 performance id in basecurrency was found: "+str(share_performanceid_basecurrency))
+            raise ValueError(
+                "More than 1 performance id in basecurrency was found: " + str(share_performanceid_basecurrency))
         share_performanceid_basecurrency = str(
             share_performanceid_basecurrency[0])
 
         # Retrieve RIPS using performance id
-        return self.get_historical_rips_by_performanceid(performance_id=share_performanceid_basecurrency, 
-                                                        return_type=return_type, 
-                                                        start_date=start_date, 
-                                                        end_date=end_date)
-
-
+        return self.get_historical_rips_by_performanceid(performance_id=share_performanceid_basecurrency,
+                                                         return_type=return_type,
+                                                         start_date=start_date,
+                                                         end_date=end_date)
 
     def get_historical_rips_by_isin(self,
                                     isin: str,
@@ -127,8 +125,8 @@ class OnDemandClient():
         # Get universe to find Morningstar Id corresponding to isin
         #   no start and end date for search of isin in universe, max length
         data_get_fundshare_universe = {'ClientId': self.provider.config['clientid'],
-                                       'ActiveStatus':  '',     # obsolete and active, max coverage (last 45d)
-                                       'InvestorType': '',      # both, dont care as only to get id
+                                       'ActiveStatus': '',  # obsolete and active, max coverage (last 45d)
+                                       'InvestorType': '',  # both, dont care as only to get id
                                        'LegalStructureId': '',  # all types of funds
                                        'ISIN': isin,
                                        'CountryId': universe}
@@ -142,14 +140,15 @@ class OnDemandClient():
         #   should be found, read out directly without searching by ISIN in the xml
         ms_id = root_n_universe.xpath(self.xpath_universe_morningstarid)
         if len(ms_id) == 0:
-            raise ValueError('No Morningstar Id could be found for ISIN {}. Maybe the share is dead for too long or in a different universe?'.format(isin))
+            raise ValueError(
+                'No Morningstar Id could be found for ISIN {}. Maybe the share is dead for too long or in a different universe?'.format(
+                    isin))
         if len(ms_id) > 1:
             raise ValueError('More than one Morningstar Id found for ISIN {}.'.format(isin))
         ms_id = str(ms_id[0])
 
         # Use the Morningstar Id to retrieve the RIPS of the basecurrency
-        return self.get_historical_rips_by_fundshareclassid(fundshareclass_id = ms_id, 
-                                                            return_type=return_type, 
-                                                            start_date=start_date, 
+        return self.get_historical_rips_by_fundshareclassid(fundshareclass_id=ms_id,
+                                                            return_type=return_type,
+                                                            start_date=start_date,
                                                             end_date=end_date)
-    

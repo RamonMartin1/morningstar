@@ -1,12 +1,14 @@
-import requests
-import logging
-import csv
-from morningstar.models.rips import RIPS
 import codecs
+import csv
+
+import requests
 from lxml import etree
 
+from morningstar.models.rips import RIPS
+from morningstar.provider.provider import Provider
 
-class OnDemand():
+
+class OnDemand(Provider):
     """OnDemand API
 
     Note:
@@ -31,20 +33,23 @@ class OnDemand():
     url_historydata = "https://edw.morningstar.com/HistoryData/HistoryData.aspx"
 
     def __init__(self, config):
-        self.config = config
+        super().__init__(config)
+        self.session = None
 
     def login(self):
-        self.sess = requests.Session()
+        self.session = requests.Session()
         ms_data_login = {
             'email': self.config['username'], 'password': self.config['password']}
-        self.sess.post(self.url_login, data=ms_data_login)
+        self.session.post(self.url_login, data=ms_data_login)
 
     def logout(self):
+        self._assert_login()
         ms_data_logout = {'clientid': self.config['clientid']}
-        self.sess.post(url=self.url_logout, data=ms_data_logout)
+        self.session.post(url=self.url_logout, data=ms_data_logout)
 
     def _xml_from_url(self, url: str, params: dict):
-        r_url = self.sess.get(url, params=params)
+        self._assert_login()
+        r_url = self.session.get(url, params=params)
         return etree.fromstring(r_url.content)
 
     def get_universe(self, params: dict) -> [etree]:
@@ -54,8 +59,13 @@ class OnDemand():
         return self._xml_from_url(url=self.url_dataoutput, params=params)
 
     def history_data(self, params: dict) -> [RIPS]:
-        with self.sess.get(self.url_historydata, params=params) as r_download_csv:
+        self._assert_login()
+        with self.session.get(self.url_historydata, params=params) as r_download_csv:
             # read rows as dict to convert to rips class
             cr = csv.DictReader(codecs.iterdecode(
                 r_download_csv.iter_lines(), 'utf-8'), delimiter=';')
             return [RIPS.from_dict(row_dict) for row_dict in cr]
+
+    def _assert_login(self):
+        if self.session is None:
+            raise ValueError("A session has to be established first by calling login()")
