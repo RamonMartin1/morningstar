@@ -1,5 +1,6 @@
-import requests
 import logging
+
+import requests
 
 from morningstar.models.ms_response import MSResponse
 from morningstar.models.ts_response import TSResponse
@@ -46,14 +47,37 @@ class Morningstar(Provider):
         return self._request(base=base, params=params)
 
     def search(self, params):
+        """Search endpoint
+
+        Args:
+            params (dict): e.g. {"isin": "US46625H1005"}
+
+        Returns:
+
+        """
         response = self._tenfore('search', params)
         return MSResponse.from_dict(response)
 
     def index(self, params):
+        """Index endpoint
+
+        Args:
+            params (dict): e.g. {"isin": "US46625H1005"}
+
+        Returns:
+
+        """
         response = self._tenfore('index.php', params)
         return MSResponse.from_dict(response)
 
     def index_ts(self, params):
+        """IndexTS endpoint
+
+        Args:
+            params (dict): e.g. {"isin": "US46625H1005"}
+
+        Returns:
+
+        """
         response = self._morningstar('IndexTS', params)
         return TSResponse.from_dict(response)
-
