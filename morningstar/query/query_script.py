@@ -5,8 +5,13 @@ from morningstar.models.ms_response import MSResponse
 from morningstar.provider.morningstar import Morningstar
 
 
-CONFIG_PATH = "../config-morningstar.yml"
+CONFIG_PATH = "../../config-morningstar.yml"
 CONFIG = yaml.safe_load(open(CONFIG_PATH))['provider']['morningstar']
+
+ISIN = "US46186M4078"
+EXCHANGE = "19"
+TICKER = "nviv"
+STATIC = False
 
 
 def print_response(ms: MSResponse):
@@ -28,32 +33,47 @@ def corpactions(provider: Morningstar):
         print_response(response)
 
 
+def write_dict(data: dict, filename: str):
+    with open(filename, "w") as f:
+        print(json.dumps(data, indent=2), file=f)
+
+
 def query(provider: Morningstar):
     """ 
     Query static/dynamic fields for asset
     """
+    if STATIC:
+        field = "SA"
+    else:
+        field = "DA"
     query = {
-            "isin": "CH0244767585",
-            "exchange": "182",
-            "fields": "SA"
+            "isin": ISIN,
+            "exchange": EXCHANGE,
+            "fields": field
             }
     response = provider.index(params=query)
-    if len(response.results):
-        print_response(response)
+    filename = "{}_{}.txt".format(TICKER, field.lower())
+    write_dict(response.results[0].data, filename)
 
 
 def fields(provider: Morningstar):
     """
     Query field IDs by querying each fields
     """
-    N = 4397; letter = "D"; filename = "dynamic_fields.txt"
-    # N = 5274; letter = "S"; filename = "static_fields.txt"
+    if STATIC:
+        N = 5274
+        letter = "S"
+        filename = "{}_sf.txt".format(TICKER)
+    else:
+        N = 4397
+        letter = "D"
+        filename = "{}_df.txt".format(TICKER)
     fields = {}
     for i in range(N):
         field = letter + str(i)
         query = {
-                "isin": "CH0244767585",
-                "exchange": "182",
+                "isin": ISIN,
+                "exchange": EXCHANGE,
                 "fields": field
                 }
         response = provider.index(params=query)
@@ -61,14 +81,12 @@ def fields(provider: Morningstar):
             key = list(response.results[0].data.keys())[0]
             fields[key] = field
             print("{}: {}".format(key, field))
-    with open(filename, "w") as f:
-        print(json.dumps(fields, indent=2), file=f)
-
+    write_dict(fields, filename)
 
 
 if __name__ == "__main__":
     provider = Morningstar(config=CONFIG)
-    # query(provider)
-    fields(provider)
+    query(provider)
+    #fields(provider)
 
 
