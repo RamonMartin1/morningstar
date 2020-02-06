@@ -26,16 +26,28 @@ class Morningstar(Provider):
     def __init__(self, config):
         super().__init__(config)
 
-    def _build_url(self, base: str, params: dict):
+    def _build_url(self, base: str, params: dict, ca_flag: bool):
         url_params = ''.join(['&{}={}'.format(k, v) for k, v in params.items()])
         url = base + \
               '?username={}&password={}'.format(self.config['username'], self.config['password']) + \
-              url_params + \
-              '&json'
-        return url
+              url_params
+        if ca_flag:
+            url += "&corpactions"
+        return url + '&json'
+
+    @staticmethod
+    def _extract_corpactions(params: dict):
+        ca = "corpactions" 
+        if ca in params.keys():
+            ca_flag = params[ca]
+            del params[ca]
+        else:
+            ca_flag = False
+        return ca_flag
 
     def _request(self, base: str, params: dict):
-        response = requests.get(self._build_url(base=base, params=params))
+        ca_flag = self._extract_corpactions(params=params)
+        response = requests.get(self._build_url(base=base, params=params, ca_flag=ca_flag))
         return response.json()
 
     def _tenfore(self, endpoint: str, params: dict):
