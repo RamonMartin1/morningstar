@@ -29,13 +29,21 @@ class MorningstarTest(unittest.TestCase):
     def test_build_url(self):
         self.assertEqual(
             'endpoint?username=foo&password=bar&json',
-            self.provider._build_url(base="endpoint", params={})
+            self.provider._build_url(base="endpoint", params={}, params_arr=[])
         )
 
     def test_build_url_params(self):
         self.assertEqual(
             'endpoint?username=foo&password=bar&isin=CH0038863350&json',
-            self.provider._build_url(base="endpoint", params={'isin': 'CH0038863350'})
+            self.provider._build_url(base="endpoint", params={'isin': 'CH0038863350'}, 
+                params_arr=[])
+        )
+
+    def test_build_url_params_arr(self):
+        self.assertEqual(
+            'endpoint?username=foo&password=bar&instrument=151.1.VOD&corpactions&json',
+            self.provider._build_url(base="endpoint", params={'instrument': '151.1.VOD'}, 
+                params_arr=["corpactions"])
         )
 
     @unittest.skipIf(CONFIG_LIVE is None, "Live configuration missing")

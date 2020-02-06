@@ -1,6 +1,6 @@
 import logging
-
 import requests
+from typing import Optional
 
 from morningstar.models.ms_response import MSResponse
 from morningstar.models.ts_response import TSResponse
@@ -26,39 +26,28 @@ class Morningstar(Provider):
     def __init__(self, config):
         super().__init__(config)
 
-    def _build_url(self, base: str, params: dict, ca_flag: bool):
+    def _build_url(self, base: str, params: dict, params_arr: list):
         url_params = ''.join(['&{}={}'.format(k, v) for k, v in params.items()])
+        url_params_arr = ''.join(['&{}'.format(p) for p in params_arr])
         url = base + \
               '?username={}&password={}'.format(self.config['username'], self.config['password']) + \
-              url_params
-        if ca_flag:
-            url += "&corpactions"
+              url_params + url_params_arr
         return url + '&json'
 
-    @staticmethod
-    def _extract_corpactions(params: dict):
-        ca = "corpactions" 
-        if ca in params.keys():
-            ca_flag = params[ca]
-            del params[ca]
-        else:
-            ca_flag = False
-        return ca_flag
-
-    def _request(self, base: str, params: dict):
-        ca_flag = self._extract_corpactions(params=params)
-        response = requests.get(self._build_url(base=base, params=params, ca_flag=ca_flag))
+    def _request(self, base: str, params: dict, params_arr: list):
+        response = requests.get(self._build_url(base=base,
+            params=params, params_arr=params_arr))
         return response.json()
 
-    def _tenfore(self, endpoint: str, params: dict):
+    def _tenfore(self, endpoint: str, params: dict, params_arr: Optional[list] = []):
         base = 'http://msxml.tenfore.com/{}'.format(endpoint)
-        return self._request(base=base, params=params)
+        return self._request(base=base, params=params, params_arr=params_arr)
 
-    def _morningstar(self, endpoint: str, params: dict):
+    def _morningstar(self, endpoint: str, params: dict, params_arr: Optional[list] = []):
         base = 'http://msuxml.morningstar.com/{}'.format(endpoint)
-        return self._request(base=base, params=params)
+        return self._request(base=base, params=params, params_arr=params_arr)
 
-    def search(self, params):
+    def search(self, params: dict):
         """Search endpoint
 
         Args:
@@ -70,7 +59,7 @@ class Morningstar(Provider):
         response = self._tenfore('search', params)
         return MSResponse.from_dict(response)
 
-    def index(self, params):
+    def index(self, params: dict):
         """Index endpoint
 
         Args:
@@ -82,7 +71,7 @@ class Morningstar(Provider):
         response = self._tenfore('index.php', params)
         return MSResponse.from_dict(response)
 
-    def index_ts(self, params):
+    def index_ts(self, params: dict, params_arr: Optional[list] = []):
         """IndexTS endpoint
 
         Args:

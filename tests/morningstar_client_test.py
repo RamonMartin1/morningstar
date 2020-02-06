@@ -43,12 +43,12 @@ class MorningstarClientTest(unittest.TestCase):
             start_date="01-01-2019",
             end_date="03-01-2019"
         )
-        self.assertEqual(Instrument.from_string("182.1.NESN"), instrument)
+        self.assertEqual(Instrument.from_string("215.1.NESR"), instrument)
 
     @unittest.skipIf(CONFIG_LIVE is None, "Live configuration missing")
     def test_find_instruments_by_isin_and_currency(self):
         instruments = self.client_live.find_instruments_by_isin_and_currency(isin="CH0038863350", currency="CHF")
-        self.assertTrue(Instrument.from_string("182.1.NESN") in instruments)
+        self.assertTrue(Instrument.from_string("215.1.NESR") in instruments)
 
     @unittest.skipIf(CONFIG_LIVE is None, "Live configuration missing")
     def test_get_instrument_prices(self):

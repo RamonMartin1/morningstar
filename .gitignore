@@ -4,6 +4,7 @@ venv/
 # Vim swap files
 *.sw[a-z]
 
+# Pycharm and OSX
 .idea/
 .swagger-codegen-ignore
 .swagger-codegen/
