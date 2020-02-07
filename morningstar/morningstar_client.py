@@ -73,6 +73,35 @@ class MorningstarClient():
             historical_price_dict[timestamp] = price
         return historical_price_dict
 
+    def get_instrument_meta(self, instrument: str):
+        """Fetches static metadata for a give instrument
+
+        Args:
+            instrument (str): e.g. "126.1.AMZN"
+
+        Returns:
+            Dict of FieldNames and corresponding values for available metadata
+            where FieldNames are defined as enum in spec/web_service_spec.py
+            {
+                "Dividend per share": "0.73",
+                "The currency of the ": "USD",
+                "The Record date of a ": "20200504",
+                ...
+                "Listing start date (": "20141128",
+                "Listing end date (st": "99991231",
+                "EDI Primary Exchange": "USNASD"
+            }
+        """
+        fields = ','.join([fc.value for fc in FieldCode])
+        response = self.provider.index({
+            'instrument': instrument,
+            'fields': fields
+        })
+        if not response.results:
+            return {}
+        else:
+            return response.results[0].data
+
     def get_fx_prices(self,
                       base_currency: str,
                       counter_currency: str,

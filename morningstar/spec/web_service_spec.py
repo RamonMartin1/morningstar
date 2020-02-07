@@ -6,6 +6,7 @@ class FieldCode(Enum):
 
     Morningstar_Morningstar_Web_Services_Specification_v5.0.pdf - Page 68
     """
+
     Symbol = "H1"
     Exchange = "H2"
     SecurityType = "H3"
@@ -30,7 +31,22 @@ class FieldCode(Enum):
     CountryFIGICode = "S1405"
     ShareClassFIGICode = "S1407"
     GlobalIDInvestmentType = "S1735"
-
+    Dividend = "S1364"
+    DividendCurrency = "S3096"
+    DividendRecordDate = "S3094"
+    SplitRatioNew = "S734"
+    SplitRatioOld = "S735"
+    SplitDate = "S740"
+    SymbolAtExchange = "S726" # ticker at given exchange, e.g. UBSG for UBS at SIX exchange
+    Description = "S3379" 
+    MarketCapitaliztion = "S1315"
+    DividendYield = "S1086"
+    PriceEarningsRatio = "S1367"
+    DebtEquityRatio = "S534"
+    PriceBookRatio = "S1081"
+    ListingStartDate = "S555"
+    ListingEndDate = "S556"
+    PrimaryExchange = "S724"
 
 class FieldNames(Enum):
     """ Morningstar Field Names (Response)
@@ -61,10 +77,25 @@ class FieldNames(Enum):
     CountryFIGICode = "FIGI country code"
     ShareClassFIGICode = "Shareclass-level FIG"
     GlobalIDInvestmentType = "Global ID investment"
+    Dividend = "Dividend per share"
+    DividendCurrency = "The currency of the "
+    DividendRecordDate = "The Record date of a "
+    SplitRatioNew = "Ratio New - Corporat"
+    SplitRatioOld = "Ratio Old - Corporat"
+    SplitDate = "Effective Date - Cor"
+    SymbolAtExchange = "EDI Local flag" 
+    Description = "MS Medium Business D" 
+    MarketCapitaliztion = "Market Cap"
+    DividendYield = "Dividend Yield"
+    PriceEarningsRatio = "PE Ratio"
+    DebtEquityRatio = "Debt to equity ratio"
+    PriceBookRatio = "Price to Book"
+    ListingStartDate = "Listing start date ("
+    ListingEndDate = "Listing end date (st"
+    PrimaryExchange = "EDI Primary Exchange"
 
     # Additional Fields?
     # "Listing market for t":"182",
-    # "Exchange code":"XVTX",
 
 
 class FilterTag(Enum):

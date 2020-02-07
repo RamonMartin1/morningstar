@@ -33,3 +33,5 @@ class SecurityTypeSpec:
     @staticmethod
     def get_value(security_type: int) -> Optional[str]:
         return security_types.get(security_type, None)
+
+

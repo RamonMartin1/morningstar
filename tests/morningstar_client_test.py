@@ -66,6 +66,45 @@ class MorningstarClientTest(unittest.TestCase):
         )
 
     @unittest.skipIf(CONFIG_LIVE is None, "Live configuration missing")
+    def test_get_instrument_prices(self):
+        meta_data = self.client_live.get_instrument_meta(
+            instrument="182.1.UBSG",
+        )
+        ref_data = {
+                'Symbol': 'UBSG',
+                'Exchange': '182',
+                'Security Type': '1',
+                'Listed Currency': 'CHF',
+                'Company name': 'UBS GROUP N',
+                'ISIN code': 'CH0244767585',
+                'Country': 'CH',
+                'Local instrument cod': '024476758',
+                'Exchange code': 'XVTX',
+                'MS Performance ID': '0P0000A5G3',
+                'Morningstar Industry': 'Banks - Diversified',
+                'Morningstar Group Na': 'Banks',
+                'Morningstar Sector N': 'Financial Services',
+                'MS Investment ID (Se': 'E0CHE010PE',
+                'FIGI country code': 'BBG007936GV2',
+                'Shareclass-level FIG': 'BBG007936GX0',
+                'Global ID investment': 'Equity',
+                'Dividend per share': '0.686497',
+                'The currency of the ': 'USD',
+                'The Record date of a': '06.05.2020',
+                'Effective Date - Cor': '05.05.2020',
+                'EDI Local flag': 'UBSG',
+                'MS Medium Business D': "UBS is the world's largest wealth manager and is the product of multiple mergers over the years. Apart from wealth and asset management, it operates a universal bank in Switzerland and a global investment bank.",
+                'Market Cap': '44856902998',
+                'Dividend Yield': '5.64',
+                'PE Ratio': '1.5147',
+                'Debt to equity ratio': '2.915621',
+                'Price to Book': '0.851571',
+                'Listing start date (': '20141128',
+                'Listing end date (st': '99991231',
+                'EDI Primary Exchange': 'CHSSX'}
+        self.assertEqual(meta_data, ref_data)
+
+    @unittest.skipIf(CONFIG_LIVE is None, "Live configuration missing")
     def test_get_fx_prices(self):
         prices = self.client_live.get_fx_prices(
             base_currency="USD",
