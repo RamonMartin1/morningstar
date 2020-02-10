@@ -66,7 +66,7 @@ class MorningstarClientTest(unittest.TestCase):
         )
 
     @unittest.skipIf(CONFIG_LIVE is None, "Live configuration missing")
-    def test_get_instrument_prices(self):
+    def test_get_instrument_meta(self):
         meta_data = self.client_live.get_instrument_meta(
             instrument="182.1.UBSG",
         )
