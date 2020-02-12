@@ -26,7 +26,7 @@ class Morningstar(Provider):
     def __init__(self, config):
         super().__init__(config)
 
-    def _build_url(self, base: str, params: dict, params_arr: Optional[list]):
+    def _build_url(self, base: str, params: dict, params_arr: Optional[list] = None):
         url_params = ''.join(['&{}={}'.format(k, v) for k, v in params.items()])
         if params_arr:
             url_params_arr = ''.join(['&{}'.format(p) for p in params_arr])
