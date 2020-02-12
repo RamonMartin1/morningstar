@@ -47,6 +47,20 @@ class FieldCode(Enum):
     ListingStartDate = "S555"
     ListingEndDate = "S556"
     PrimaryExchange = "S724"
+    InterestRate = "S547"
+    PaymentFrequency = "S1546"
+    CouponDate = "1680"
+    CouponType = "1723"
+    NominalValue = "S1615"
+    RateCalculationType = "S1536"
+    DayCountMethod = "1543"
+    ReferenceRate = "1544"
+    MaturityStartDate = "S545"
+    MaturityEndDate = "S546"
+    BondType = "S21"
+    SegmentCode = "S36"
+    SectorCode = "S37"
+
 
 class FieldNames(Enum):
     """ Morningstar Field Names (Response)
@@ -93,6 +107,20 @@ class FieldNames(Enum):
     ListingStartDate = "Listing start date ("
     ListingEndDate = "Listing end date (st"
     PrimaryExchange = "EDI Primary Exchange"
+    InterestRate = "Interest Rate"
+    PaymentFrequency = "Defines frequency of"
+    CouponDate = "Coupon date"
+    CouponType = "Coupon Type"
+    NominalValue = "Nominal value"
+    RateCalculationType = "Rate Calculation"
+    DayCountMethod = "Day count method for"
+    ReferenceRate = "Refers to a relevant"
+    MaturityStartDate = "Maturity start date"
+    MaturityEndDate = "Maturity end date"
+    BondType = "Market specific indu"
+    SegmentCode = "Market specific segm"
+    SectorCode = "Market specific sect"
+
 
     # Additional Fields?
     # "Listing market for t":"182",
