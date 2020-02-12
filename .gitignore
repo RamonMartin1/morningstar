@@ -1,11 +1,5 @@
-# Python virtual environment
-venv/
-
 # Vim swap files
 *.sw[a-z]
-
-# Test script 
-morningstar/query.py
 
 # Pycharm and OSX
 .idea/

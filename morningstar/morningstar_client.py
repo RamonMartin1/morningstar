@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List
 
 from morningstar.models.ms_response import MSResponse
 from morningstar.config import config
@@ -73,8 +73,8 @@ class MorningstarClient():
             historical_price_dict[timestamp] = price
         return historical_price_dict
 
-    def get_instrument_meta(self, instrument: str):
-        """Fetches static metadata for a give instrument
+    def get_instrument_meta(self, instrument: str, fields: Optional[List[str]] = None):
+        """Fetches static metadata for a given instrument
 
         Args:
             instrument (str): e.g. "126.1.AMZN"
@@ -92,7 +92,10 @@ class MorningstarClient():
                 "EDI Primary Exchange": "USNASD"
             }
         """
-        fields = ','.join([fc.value for fc in FieldCode])
+        if not fields:
+            fields = ','.join([fc.value for fc in FieldCode])
+        else:
+            fields = ','.join([f for f in fields])
         response = self.provider.index({
             'instrument': instrument,
             'fields': fields

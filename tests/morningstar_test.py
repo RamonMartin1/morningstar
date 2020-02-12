@@ -32,14 +32,14 @@ class MorningstarTest(unittest.TestCase):
             self.provider._build_url(base="endpoint", params={}, params_arr=[])
         )
 
-    def test_build_url_params(self):
+    def test_build_url_params_arr_empty(self):
         self.assertEqual(
             'endpoint?username=foo&password=bar&isin=CH0038863350&json',
             self.provider._build_url(base="endpoint", params={'isin': 'CH0038863350'}, 
                 params_arr=[])
         )
 
-    def test_build_url_params_arr(self):
+    def test_build_url_params_arr_set(self):
         self.assertEqual(
             'endpoint?username=foo&password=bar&instrument=151.1.VOD&corpactions&json',
             self.provider._build_url(base="endpoint", params={'instrument': '151.1.VOD'}, 

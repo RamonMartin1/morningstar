@@ -1,6 +1,6 @@
 import logging
 import requests
-from typing import Optional
+from typing import Optional, List
 
 from morningstar.models.ms_response import MSResponse
 from morningstar.models.ts_response import TSResponse
@@ -26,9 +26,12 @@ class Morningstar(Provider):
     def __init__(self, config):
         super().__init__(config)
 
-    def _build_url(self, base: str, params: dict, params_arr: list):
+    def _build_url(self, base: str, params: dict, params_arr: Optional[list]):
         url_params = ''.join(['&{}={}'.format(k, v) for k, v in params.items()])
-        url_params_arr = ''.join(['&{}'.format(p) for p in params_arr])
+        if params_arr:
+            url_params_arr = ''.join(['&{}'.format(p) for p in params_arr])
+        else:
+            url_params_arr = ''
         url = base + \
               '?username={}&password={}'.format(self.config['username'], self.config['password']) + \
               url_params + url_params_arr
@@ -39,11 +42,11 @@ class Morningstar(Provider):
             params=params, params_arr=params_arr))
         return response.json()
 
-    def _tenfore(self, endpoint: str, params: dict, params_arr: Optional[list] = []):
+    def _tenfore(self, endpoint: str, params: dict, params_arr: Optional[list] = None):
         base = 'http://msxml.tenfore.com/{}'.format(endpoint)
         return self._request(base=base, params=params, params_arr=params_arr)
 
-    def _morningstar(self, endpoint: str, params: dict, params_arr: Optional[list] = []):
+    def _morningstar(self, endpoint: str, params: dict, params_arr: Optional[list] = None):
         base = 'http://msuxml.morningstar.com/{}'.format(endpoint)
         return self._request(base=base, params=params, params_arr=params_arr)
 
@@ -71,7 +74,7 @@ class Morningstar(Provider):
         response = self._tenfore('index.php', params)
         return MSResponse.from_dict(response)
 
-    def index_ts(self, params: dict, params_arr: Optional[list] = []):
+    def index_ts(self, params: dict, params_arr: list = []):
         """IndexTS endpoint
 
         Args:
