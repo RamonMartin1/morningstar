@@ -48,7 +48,7 @@ class OnDemandClient():
                               'DataType': 'rips',
                               'StartDate': start_date,
                               'EndDate': end_date,
-                              'PriceType': str(return_type.value),
+                              'PriceTypeId': str(return_type.value),
                               'PerformanceId': performance_id}
         return self.provider.history_data(params=params_historydata)
 
